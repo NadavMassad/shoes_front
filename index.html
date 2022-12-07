@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- GUI -->
+    Brand<input id="ubrand">
+    Color<input id="ucolor">
+    <br>
+    <br>
+    Price<input id="uprice">
+
+    <button onclick="addData()">Add Shoe</button>
+    <div id="display"></div>
+    <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
+    <script>
+        const MY_SERVER = "https://shoes-p3lv.onrender.com/shoes/" //flask
+
+        const loadData = async () => {
+            // get (READ)
+            const res = await axios.get(MY_SERVER) //get data from server
+            display.innerHTML = res.data.map(shoe => `
+            <h1>
+            <button onclick='updShoe(${shoe.id})'>update</button>
+            <button onclick='delShoe(${shoe.id})'>Delete</button>
+            <br>
+            Brand: ${shoe.brand}<br> Color: ${shoe.color}<br>Number Of Wheels: ${shoe.price}<br></h1><hr>`).join("") //build display
+            console.log(res.data) //display date  in console
+        }
+
+        loadData()
+        // post (Create)
+        const addData = () => {
+            axios.post(MY_SERVER, { brand: ubrand.value, color: ucolor.value, price: uprice.value}).then((res) => console.log(res.data))
+        }
+
+        //delete (delete)
+        const delShoe = async (id) => {
+            const res = await axios.delete(MY_SERVER + id).then((res) => console.log(res.data))
+            console.log(res)
+        }
+
+        const updShoe = async (id) => {
+            // put (update)
+            const res = await axios.put(MY_SERVER + id, { brand: ubrand.value, color: ucolor.value, price: uprice.value})
+            console.log(res)
+            loadData()
+        }
+    </script>
+</body>
+
+</html>
