@@ -38,12 +38,15 @@
         // post (Create)
         const addData = () => {
             axios.post(MY_SERVER, { brand: ubrand.value, color: ucolor.value, price: uprice.value}).then((res) => console.log(res.data))
+            loadData()
+
         }
 
         //delete (delete)
         const delShoe = async (id) => {
             const res = await axios.delete(MY_SERVER + id).then((res) => console.log(res.data))
             console.log(res)
+            loadData()
         }
 
         const updShoe = async (id) => {
